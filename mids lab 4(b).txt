@@ -1,0 +1,69 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import r2_score, mean_absolute_error
+
+# Load dataset
+df = pd.read_csv(r"D:\Downloads\archive (2)\abalone.csv")
+
+# Encode categorical column
+le = LabelEncoder()
+df["Sex"] = le.fit_transform(df["Sex"])
+
+# Create Age column
+df["Age"] = df["Rings"] + 1.5
+
+# Features and target
+X = df.drop(["Rings", "Age"], axis=1)
+y = df["Age"]
+
+# Train-test split
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y,
+    test_size=0.2,
+    random_state=42
+)
+
+# Model
+model = LinearRegression()
+
+# Training
+model.fit(X_train, y_train)
+
+# Prediction
+y_pred = model.predict(X_test)
+
+# Evaluation
+print("R2 Score:", r2_score(y_test, y_pred))
+print("MAE:", mean_absolute_error(y_test, y_pred))
+
+errors = y_test - y_pred
+
+plt.figure(figsize=(7,5))
+
+sns.histplot(errors, kde=True)
+
+plt.xlabel("Prediction Error")
+plt.title("Distribution of Prediction Errors")
+
+plt.show()
+
+# Actual vs Predicted line graph
+
+plt.figure(figsize=(10,5))
+
+plt.plot(y_test.values[:50], label="Actual")
+plt.plot(y_pred[:50], label="Predicted")
+
+plt.xlabel("Samples")
+plt.ylabel("Age")
+plt.title("Actual vs Predicted Age")
+
+plt.legend()
+
+plt.show()

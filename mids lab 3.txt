@@ -1,0 +1,41 @@
+# Import libraries
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.metrics import accuracy_score
+
+# Load dataset
+df = pd.read_csv(r"D:\Downloads\archive (1)\IMDB Dataset.csv")
+
+# Input and output
+X = df["review"]
+y = df["sentiment"]
+
+# Convert text to numerical data
+cv = CountVectorizer(stop_words='english')
+X = cv.fit_transform(X)
+
+# Split dataset
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# Train model
+model = MultinomialNB()
+model.fit(X_train, y_train)
+
+# Predict
+y_pred = model.predict(X_test)
+
+# Accuracy
+print("Accuracy:", accuracy_score(y_test, y_pred))
+
+# Custom input
+text = ["This movie is very bad"]
+text_vector = cv.transform(text)
+
+prediction = model.predict(text_vector)
+
+print("sentence:", text[0])
+print("Sentiment:", prediction[0])

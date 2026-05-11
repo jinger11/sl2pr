@@ -1,0 +1,49 @@
+# Import libraries
+import pandas as pd
+from sklearn.preprocessing import LabelEncoder, StandardScaler
+from sklearn.model_selection import train_test_split
+
+# Load dataset
+df = pd.read_csv("Titanic-Dataset.csv")
+
+# Display first 5 rows
+print(df.head())
+
+# Check missing values
+print(df.isnull().sum())
+
+# Handle missing values
+df['Age'].fillna(df['Age'].median(), inplace=True)
+df['Embarked'].fillna(df['Embarked'].mode()[0], inplace=True)
+
+# Drop Cabin column
+df.drop('Cabin', axis=1, inplace=True)
+
+# Remove unnecessary columns
+df.drop(['PassengerId', 'Name', 'Ticket'], axis=1, inplace=True)
+
+# Encode categorical columns
+encoder = LabelEncoder()
+
+df['Sex'] = encoder.fit_transform(df['Sex'])
+df['Embarked'] = encoder.fit_transform(df['Embarked'])
+
+# Feature scaling
+scaler = StandardScaler()
+
+df[['Age', 'Fare']] = scaler.fit_transform(df[['Age', 'Fare']])
+
+# Separate features and target
+X = df.drop('Survived', axis=1)
+y = df['Survived']
+
+# Split dataset
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# Display processed data
+print(df.head())
+
+print("Training data shape:", X_train.shape)
+print("Testing data shape:", X_test.shape)

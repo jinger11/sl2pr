@@ -1,0 +1,39 @@
+import numpy as np
+
+# ART1 Parameters
+rho = 0.6  # Vigilance parameter
+num_features = 4
+
+# Binary input patterns
+patterns = np.array([
+    [1, 1, 0, 0],
+    [1, 1, 0, 1],
+    [0, 0, 1, 1],
+    [0, 1, 1, 1]
+])
+
+# Initialize clusters
+clusters = []
+
+def match(pattern, cluster):
+    intersection = np.sum(pattern * cluster)
+    norm = np.sum(pattern)
+    return intersection / norm
+
+for pattern in patterns:
+    assigned = False
+    
+    for i, cluster in enumerate(clusters):
+        if match(pattern, cluster) >= rho:
+            clusters[i] = np.minimum(cluster, pattern)
+            print(f"Pattern {pattern} assigned to Cluster {i+1}")
+            assigned = True
+            break
+    
+    if not assigned:
+        clusters.append(pattern.copy())
+        print(f"Pattern {pattern} creates new Cluster {len(clusters)}")
+
+print("\nFinal Clusters:")
+for i, cluster in enumerate(clusters):
+    print(f"Cluster {i+1}: {cluster}")

@@ -1,0 +1,95 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Activation functions
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+
+def tanh(x):
+    return np.tanh(x)
+
+def relu(x):
+    return np.maximum(0, x)
+
+def leaky_relu(x):
+    return np.where(x > 0, x, 0.01 * x)
+
+# Step activation function
+def step(x):
+    return np.where(x >= 0, 1, 0)
+
+# Softmax function
+def softmax(x):
+    exp_x = np.exp(x - np.max(x))  # numerical stability
+    return exp_x / np.sum(exp_x)
+
+# Input range
+x = np.linspace(-10, 10, 100)
+
+# -----------------------------
+# Step Function (1st)
+# -----------------------------
+plt.figure()
+plt.plot(x, step(x))
+plt.title("Step Activation Function")
+plt.xlabel("Input")
+plt.ylabel("Output")
+plt.grid()
+plt.show()
+
+# -----------------------------
+# Sigmoid Graph
+# -----------------------------
+plt.figure()
+plt.plot(x, sigmoid(x))
+plt.title("Sigmoid Function")
+plt.xlabel("Input")
+plt.ylabel("Output")
+plt.grid()
+plt.show()
+
+# -----------------------------
+# Softmax Graph (3rd)
+# (applied on vector slices)
+# -----------------------------
+plt.figure()
+softmax_values = np.array([softmax(np.array([i, 0]))[0] for i in x])
+plt.plot(x, softmax_values)
+plt.title("Softmax Function")
+plt.xlabel("Input")
+plt.ylabel("Output")
+plt.grid()
+plt.show()
+
+# -----------------------------
+# Tanh Graph
+# -----------------------------
+plt.figure()
+plt.plot(x, tanh(x))
+plt.title("Tanh Function")
+plt.xlabel("Input")
+plt.ylabel("Output")
+plt.grid()
+plt.show()
+
+# -----------------------------
+# ReLU Graph
+# -----------------------------
+plt.figure()
+plt.plot(x, relu(x))
+plt.title("ReLU Function")
+plt.xlabel("Input")
+plt.ylabel("Output")
+plt.grid()
+plt.show()
+
+# -----------------------------
+# Leaky ReLU Graph
+# -----------------------------
+plt.figure()
+plt.plot(x, leaky_relu(x))
+plt.title("Leaky ReLU Function")
+plt.xlabel("Input")
+plt.ylabel("Output")
+plt.grid()
+plt.show()

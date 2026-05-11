@@ -1,0 +1,80 @@
+import pandas as pd 
+import numpy as np
+import matplotlib.pyplot as plt 
+import seaborn as sns
+import nltk
+from nltk.corpus import stopwords 
+from textblob import TextBlob
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import CountVectorizer 
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+
+df = pd.read_csv(r"D:\Downloads\Combined Data.csv\Combined Data.csv")
+
+text_col = None
+for col in df.columns:
+    if df[col].dtype == 'object': 
+        text_col = col
+        break
+print("\nUsing text column:", text_col)
+df = df[[text_col]]
+df.rename(columns={text_col: 'text'}, inplace=True)
+
+
+nltk.download('stopwords')
+stop_words = set(stopwords.words('english'))
+df['text'] = df['text'].astype(str)
+df['text'] = df['text'].str.lower()
+df['text'] = df['text'].str.replace(r'\d+', '', regex=True)
+df['text'] = df['text'].str.replace(r'[^\w\s]', '', regex=True)
+df['text'] = df['text'].apply(
+lambda x: " ".join(word for word in x.split() if word not in stop_words)
+)
+ 
+print("\n===== CLEANED TEXT =====")
+print(df.head())
+
+
+df['tokens'] = df['text'].apply(lambda x: x.split())
+print("\n===== TOKENS =====")
+print(df[['text','tokens']].head())
+
+
+# Step 6: Sentiment Analysis
+df['polarity'] = df['text'].apply(lambda x: TextBlob(x).sentiment.polarity) 
+df['Sentiment'] = np.where(df['polarity'] >= 0, 'Positive', 'Negative')
+print("\n===== SENTIMENT OUTPUT =====")
+print(df[['text','polarity','Sentiment']].head())
+
+plt.figure(figsize=(6,4)) 
+sns.countplot(x='Sentiment', data=df) 
+plt.title("Sentiment Distribution") 
+plt.show()
+
+
+
+vectorizer = CountVectorizer()
+X = vectorizer.fit_transform(df['text'])
+y = df['Sentiment']
+# Train-Test Split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+# Step 9: KNN Model
+knn = KNeighborsClassifier() 
+knn.fit(X_train, y_train)
+y_pred = knn.predict(X_test)
+# Accuracy
+accuracy = accuracy_score(y_test, y_pred) 
+print("\n===== ACCURACY =====")
+print("Accuracy:", accuracy)
+# Classification Report
+print("\n===== CLASSIFICATION REPORT =====")
+print(classification_report(y_test, y_pred))
+# Confusion Matrix
+cm = confusion_matrix(y_test, y_pred)
+plt.figure(figsize=(5,4))
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues') 
+plt.title("Confusion Matrix")
+plt.xlabel("Predicted") 
+plt.ylabel("Actual") 
+plt.show()
