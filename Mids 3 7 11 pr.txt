@@ -1,0 +1,46 @@
+# Program to Recognize Document as Positive or Negative
+# using Sentiment Classification
+
+# Step 1: Import Libraries
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.naive_bayes import MultinomialNB
+
+# Step 2: Training Data
+documents = [
+    "I love this product",
+    "This movie is fantastic",
+    "I am very happy today",
+    "This is a bad product",
+    "I hate this movie",
+    "I am feeling sad"
+]
+
+# Labels
+# Positive = 1
+# Negative = 0
+labels = [1, 1, 1, 0, 0, 0]
+
+# Step 3: Convert Text into Numeric Form
+vectorizer = CountVectorizer()
+
+X = vectorizer.fit_transform(documents)
+
+# Step 4: Train Classifier
+model = MultinomialNB()
+
+model.fit(X, labels)
+
+# Step 5: Test Document
+test_doc = ["This product is very good"]
+
+# Convert test document
+test_vector = vectorizer.transform(test_doc)
+
+# Step 6: Prediction
+prediction = model.predict(test_vector)
+
+# Step 7: Output Result
+if prediction[0] == 1:
+    print("Document is Positive")
+else:
+    print("Document is Negative")

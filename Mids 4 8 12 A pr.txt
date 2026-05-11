@@ -1,0 +1,36 @@
+# Abalone Dataset - Classification Program
+# Predict Number of Rings
+
+# Step 1: Import Libraries
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score
+
+# Step 2: Load Dataset
+df = pd.read_csv("abalone.csv")
+
+# Step 3: Convert Categorical Data
+df['Sex'] = df['Sex'].map({'M': 0, 'F': 1, 'I': 2})
+
+# Step 4: Select Features and Target
+X = df.drop('Rings', axis=1)
+y = df['Rings']
+
+# Step 5: Split Dataset
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# Step 6: Apply KNN Classifier
+model = KNeighborsClassifier(n_neighbors=5)
+
+# Train Model
+model.fit(X_train, y_train)
+
+# Step 7: Prediction
+y_pred = model.predict(X_test)
+
+# Step 8: Accuracy
+print("Accuracy:")
+print(accuracy_score(y_test, y_pred))

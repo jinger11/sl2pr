@@ -1,0 +1,45 @@
+# Back Propagation Feed Forward Neural Network
+
+import numpy as np
+
+# Input data
+X = np.array([[0,0],[0,1],[1,0],[1,1]])
+
+# Output data
+y = np.array([[0],[1],[1],[0]])
+
+# Sigmoid function
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+
+# Derivative of sigmoid
+def derivative(x):
+    return x * (1 - x)
+
+# Initialize weights
+np.random.seed(1)
+
+W1 = np.random.rand(2,4)
+W2 = np.random.rand(4,1)
+
+# Training
+for i in range(10000):
+
+    # Forward propagation
+    hidden = sigmoid(np.dot(X, W1))
+    output = sigmoid(np.dot(hidden, W2))
+
+    # Error
+    error = y - output
+
+    # Back propagation
+    d_output = error * derivative(output)
+    d_hidden = d_output.dot(W2.T) * derivative(hidden)
+
+    # Update weights
+    W2 += hidden.T.dot(d_output)
+    W1 += X.T.dot(d_hidden)
+
+# Final Output
+print("Output after training:")
+print(output)

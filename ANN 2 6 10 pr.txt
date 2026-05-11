@@ -1,0 +1,42 @@
+#ART
+import numpy as np
+
+# Input patterns
+X = np.array([[1, 1, 0, 0],
+              [1, 0, 0, 0],
+              [0, 0, 1, 1],
+              [0, 0, 1, 0]])
+
+# Vigilance parameter
+vigilance = 0.5
+
+# Initialize empty clusters
+clusters = []
+
+# ART Clustering
+for pattern in X:
+
+    matched = False
+
+    for i, cluster in enumerate(clusters):
+
+        # Similarity test
+        match = np.sum(np.minimum(pattern, cluster)) / np.sum(pattern)
+
+        if match >= vigilance:
+            print("Pattern", pattern, "belongs to Cluster", i+1)
+
+            # Update cluster
+            clusters[i] = np.maximum(cluster, pattern)
+            matched = True
+            break
+
+    # Create new cluster
+    if not matched:
+        clusters.append(pattern.copy())
+        print("Pattern", pattern, "creates new Cluster", len(clusters))
+
+# Final Clusters
+print("\nFinal Clusters:")
+for i, cluster in enumerate(clusters):
+    print("Cluster", i+1, ":", cluster)

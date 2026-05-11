@@ -1,0 +1,69 @@
+#Activation function 
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Input values
+x = np.linspace(-10, 10, 100)
+
+# 1. Sigmoid Function
+sigmoid = 1 / (1 + np.exp(-x))
+
+plt.figure()
+plt.plot(x, sigmoid)
+plt.title("Sigmoid Function")
+plt.xlabel("Input")
+plt.ylabel("Output")
+plt.grid(True)
+
+# 2. Tanh Function
+tanh = np.tanh(x)
+
+plt.figure()
+plt.plot(x, tanh)
+plt.title("Tanh Function")
+plt.xlabel("Input")
+plt.ylabel("Output")
+plt.grid(True)
+
+# 3. ReLU Function
+relu = np.maximum(0, x)
+
+plt.figure()
+plt.plot(x, relu)
+plt.title("ReLU Function")
+plt.xlabel("Input")
+plt.ylabel("Output")
+plt.grid(True)
+
+# 4. Step Function
+step = np.where(x >= 0, 1, 0)
+
+plt.figure()
+plt.plot(x, step)
+plt.title("Step Function")
+plt.xlabel("Input")
+plt.ylabel("Output")
+plt.grid(True)
+
+# 5. Linear Function
+linear = x
+
+plt.figure()
+plt.plot(x, linear)
+plt.title("Linear Function")
+plt.xlabel("Input")
+plt.ylabel("Output")
+plt.grid(True)
+
+# 6. Leaky ReLU Function
+leaky_relu = np.where(x > 0, x, 0.01 * x)
+
+plt.figure()
+plt.plot(x, leaky_relu)
+plt.title("Leaky ReLU Function")
+plt.xlabel("Input")
+plt.ylabel("Output")
+plt.grid(True)
+
+# Show all graphs
+plt.show()
